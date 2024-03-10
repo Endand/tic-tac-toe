@@ -25,9 +25,40 @@ class GameBoard
 
   # method to check for a win
   def check_result
+
+    #check if there is a winner
+
+    #checks for rows
+    if @game_board.any? { |row| row.uniq.length == 1 && row[0] != ' ' }
+      return'win'
+
+    #checks for cols
+    elsif @game_board.transpose.any? { |col| col.uniq.length == 1 && col[0] != ' ' }
+      return'win'
+    
+    #check diagonals
+    elsif check_diagonal('O') || check_diagonal('X')  
+      return "win"
+
+    end
+
+    #since there isn't a winner and board is full, it's a tie
     if @game_board.all? { |row| row.all? { |element| element!=' ' } }
       'draw'
     end
+  end
+
+  def check_diagonal(symbol)
+    winning_combos = [
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
+    ]
+
+    winning_combos.each do |combination|
+      return true if combination.all? 
+      {|spot_row,spot_col| @game_board[spot_row][spot_col]==symbol}
+    end
+    false
   end
 
   def can_put?(row,col)
@@ -119,12 +150,11 @@ class TicTacToe
 
       @game_board.mark_cell(row, col, player.symbol)
 
-      # check and break if win condition met
       game_result = @game_board.check_result
 
       winner = player if game_result == 'win'
 
-      turn += 1 unless game_result == 'win'
+      turn += 1
 
     end
     @game_board.display
