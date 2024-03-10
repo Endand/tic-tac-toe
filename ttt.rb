@@ -1,13 +1,29 @@
 class GameBoard
+  # represent gameboard as 2D array
   def initialize
-    puts 'Game Board created'
-    #makes 2D gameboard
+    @game_board = Array.new(3) { Array.new(3) {" "} }
   end
 
-  #method to display gameboard
-  #method to mark a cell
-  #method to check for a win
-  
+  # method to display gameboard
+  def display
+    @game_board.each_with_index do |row,rindex|
+      row.each_with_index do |col,cindex|
+        print "|" unless cindex==0
+        print @game_board[rindex][cindex]
+      end
+      
+      puts
+      puts "-+-+-" unless rindex == 2
+    end
+    puts
+  end
+  # method to mark a cell
+  def mark_cell(row,col,symbol)
+    @game_board[row][col] = symbol if @game_board[row][col]==" "
+  end
+
+
+  # method to check for a win
 end
 
 class Player
@@ -24,13 +40,13 @@ class Player
     @symbol
   end
 
-  #method for making a move
+  # method for making a move
 end
 
 class TicTacToe
-  #manage overall game flow
-  #manage player turn
-  #check for win or draw
+  # manage overall game flow
+  # manage player turn
+  # check for win or draw
   def initialize
     puts "Play Tic Tac Toe!\n\n"
 
@@ -41,27 +57,35 @@ class TicTacToe
 
     puts "\nWelcome #{@player1.name} and #{@player2.name}!"
 
+    @game_board = GameBoard.new
+
     play_game
   end
 
   def play_game
-    game_result=''
-    turn=0
-    while game_result != 'win' and game_result!='draw'
-    
+    game_result = ''
+    turn = 0
+    while game_result != 'win' and game_result != 'draw'
+
       player = (turn.even? ? @player1 : @player2)
 
-      p player.symbol
+      @game_board.display
 
-      if turn==4 
-        game_result='win'
-      end 
+      @game_board.mark_cell(0,0,player.symbol)
 
-      turn+=1
+      @game_board.display
+
+      if turn == 0
+        game_result = 'win'
+      end
+
+      turn += 1
 
     end
-
   end
 end
 
 game = TicTacToe.new
+
+
+
