@@ -8,24 +8,30 @@ class GameBoard
   def display
     @game_board.each_with_index do |row, rindex|
       row.each_with_index do |col, cindex|
-        print "|" unless cindex == 0
+        print " |" unless cindex == 0
         print @game_board[rindex][cindex]
       end
 
       puts
-      puts "-+-+-" unless rindex == 2
+      puts "--+--+--" unless rindex == 2
     end
     puts
   end
 
   # method to mark a cell
   def mark_cell(row, col, symbol)
-    @game_board[row][col] = symbol if @game_board[row][col] == " "
+      @game_board[row][col] = symbol if @game_board[row][col] == " "
   end
 
   # method to check for a win
   def check_result
-    'draw'
+    if @game_board.all? { |row| row.all? { |element| element!=' ' } }
+      'draw'
+    end
+  end
+
+  def can_put?(row,col)
+    @game_board[row][col]==' '
   end
 end
 
@@ -99,11 +105,17 @@ class TicTacToe
 
       player = (turn.even? ? @player1 : @player2)
 
-      puts "Current Board State: "
-      puts
-      @game_board.display
+      show_curr_state
 
-      (row, col) = player.make_move
+      row=nil
+      col=nil
+
+      loop do 
+        (row, col) = player.make_move
+        break if @game_board.can_put?(row,col)
+        puts "That spot is already taken. Please choose another spot.\n"
+        show_curr_state
+      end
 
       @game_board.mark_cell(row, col, player.symbol)
 
@@ -115,12 +127,18 @@ class TicTacToe
       turn += 1 unless game_result == 'win'
 
     end
-
+    @game_board.display
     if game_result=='win'
       puts "Congrats #{winner.name}, you won!"
     else
       puts "It's a draw!"
     end
+  end
+
+  def show_curr_state
+    puts "Current Board State: "
+      puts
+      @game_board.display
   end
 end
 
