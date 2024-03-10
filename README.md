@@ -24,6 +24,8 @@ Tic Tac Toe is a classic two-player game implemented in Ruby. Enjoy the fun of s
 2. Players take turns marking a cell on the 3x3 grid.
 3. The game checks for a winner after each move.
 4. The game ends when a player wins or it's a draw.
+5. Select if you want to replay or not. If you replay, player order changes.
+
 
 ## Game Rules
 
