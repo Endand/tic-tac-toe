@@ -21,12 +21,14 @@ end
 
 class TicTacToe
   def initialize
-    game = GameBoard.new
+    puts "Play Tic Tac Toe!\n\n"
 
+    print 'Enter Player1 Name: '
     player1 = Player.new(gets.chomp.capitalize, 'O')
+    print 'Enter Player2 Name: '
     player2 = Player.new(gets.chomp.capitalize, 'X')
 
-    puts "Welcome #{player1.name}!"
+    puts "\nWelcome #{player1.name} and #{player2.name}!"
   end
 end
 
