@@ -55,8 +55,7 @@ class GameBoard
     ]
 
     winning_combos.each do |combination|
-      return true if combination.all? 
-      {|spot_row,spot_col| @game_board[spot_row][spot_col]==symbol}
+      return true if combination.all? {|spot_row,spot_col| @game_board[spot_row][spot_col]==symbol}
     end
     false
   end
