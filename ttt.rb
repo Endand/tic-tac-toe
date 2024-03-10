@@ -24,6 +24,9 @@ class GameBoard
   end
 
   # method to check for a win
+  def check_result
+    'draw'
+  end
 end
 
 class Player
@@ -91,6 +94,7 @@ class TicTacToe
   def play_game
     game_result = ''
     turn = 0
+    winner = nil
     while game_result != 'win' and game_result != 'draw'
 
       player = (turn.even? ? @player1 : @player2)
@@ -103,12 +107,19 @@ class TicTacToe
 
       @game_board.mark_cell(row, col, player.symbol)
 
-      if turn == 4
-        game_result = 'win'
-      end
+      # check and break if win condition met
+      game_result = @game_board.check_result
 
-      turn += 1
+      winner = player if game_result == 'win'
 
+      turn += 1 unless game_result == 'win'
+
+    end
+
+    if game_result=='win'
+      puts "Congrats #{winner.name}, you won!"
+    else
+      puts "It's a draw!"
     end
   end
 end
