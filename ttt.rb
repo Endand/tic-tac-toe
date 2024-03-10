@@ -20,48 +20,51 @@ class GameBoard
 
   # method to mark a cell
   def mark_cell(row, col, symbol)
-      @game_board[row][col] = symbol if @game_board[row][col] == " "
+    @game_board[row][col] = symbol if @game_board[row][col] == " "
   end
 
   # method to check for a win
   def check_result
+    # check if there is a winner
 
-    #check if there is a winner
-
-    #checks for rows
+    # checks for rows
     if @game_board.any? { |row| row.uniq.length == 1 && row[0] != ' ' }
-      return'win'
+      return 'win'
 
-    #checks for cols
+    # checks for cols
     elsif @game_board.transpose.any? { |col| col.uniq.length == 1 && col[0] != ' ' }
-      return'win'
-    
-    #check diagonals
-    elsif check_diagonal('O') || check_diagonal('X')  
+      return 'win'
+
+    # check diagonals
+    elsif check_diagonal('O') || check_diagonal('X')
       return "win"
 
     end
 
-    #since there isn't a winner and board is full, it's a tie
-    if @game_board.all? { |row| row.all? { |element| element!=' ' } }
+    # since there isn't a winner and board is full, it's a tie
+    if @game_board.all? { |row| row.all? { |element| element != ' ' } }
       'draw'
     end
   end
 
   def check_diagonal(symbol)
     winning_combos = [
-    [[0, 0], [1, 1], [2, 2]],
-    [[0, 2], [1, 1], [2, 0]],
+      [[0, 0], [1, 1], [2, 2]],
+      [[0, 2], [1, 1], [2, 0]],
     ]
 
     winning_combos.each do |combination|
-      return true if combination.all? {|spot_row,spot_col| @game_board[spot_row][spot_col]==symbol}
+      return true if combination.all? { |spot_row, spot_col| @game_board[spot_row][spot_col] == symbol }
     end
     false
   end
 
-  def can_put?(row,col)
-    @game_board[row][col]==' '
+  def can_put?(row, col)
+    @game_board[row][col] == ' '
+  end
+
+  def reset_board
+    @game_board = Array.new(3) { Array.new(3) { " " } }
   end
 end
 
@@ -123,26 +126,27 @@ class TicTacToe
     puts
 
     @game_board = GameBoard.new
-
-    play_game
+    play_game(0)
   end
 
-  def play_game
+  def play_game(game_num)
+    times_played = game_num
     game_result = ''
-    turn = 0
     winner = nil
+    turn = times_played
     while game_result != 'win' and game_result != 'draw'
 
       player = (turn.even? ? @player1 : @player2)
 
       show_curr_state
 
-      row=nil
-      col=nil
+      row = nil
+      col = nil
 
-      loop do 
+      loop do
         (row, col) = player.make_move
-        break if @game_board.can_put?(row,col)
+        break if @game_board.can_put?(row, col)
+
         puts "That spot is already taken. Please choose another spot.\n"
         show_curr_state
       end
@@ -157,17 +161,37 @@ class TicTacToe
 
     end
     @game_board.display
-    if game_result=='win'
+    if game_result == 'win'
       puts "Congrats #{winner.name}, you won!"
     else
       puts "It's a draw!"
+    end
+
+    puts
+    play_again = ''
+    loop do
+      print "Do you want to play a new game with the same person? \nPlayer order will change. \n(Y/N)"
+      play_again = gets.chomp.downcase
+      break if ['y', 'n'].include?(play_again)
+
+      puts 'Invalid input. Please enter Y or N.'
+      puts
+    end
+
+    if play_again == 'y'
+      times_played += 1
+      puts
+      @game_board.reset_board
+      play_game(times_played)
+
+    else
+      puts "Thank you for playing!"
     end
   end
 
   def show_curr_state
     puts "Current Board State: "
-      puts
-      @game_board.display
+    @game_board.display
   end
 end
 
